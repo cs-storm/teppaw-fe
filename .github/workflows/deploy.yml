@@ -38,8 +38,7 @@ jobs:
       - name: Install yarn
         run: npm install yarn -g
       - name: Install dependencies
-        run: 
-        rm yarn.lock && yarn install --network-timeout 100000
+        run: rm yarn.lock && yarn install --network-timeout 100000
       - name: Build
         run: yarn build
       - name: Setup Pages
