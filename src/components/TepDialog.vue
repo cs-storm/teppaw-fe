@@ -32,7 +32,7 @@ const handelClose = () => {
           type="primary"
           @click="
             () => {
-              props.handelCreate()
+              props.handelCreate && props.handelCreate()
               emits('update:modelValue', false)
             }
           "
