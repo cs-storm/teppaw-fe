@@ -4,29 +4,44 @@ import { ref, reactive, onMounted } from 'vue'
 import petInformation from './components/petInformation.vue'
 import petGallery from './components/petGallery.vue'
 import createPetDialogVue from './components/createPetDialog.vue'
-import { getPetDescription } from '../../api/pet'
+import { $getPetDescription } from '../../api/pet'
+import { useUserStore } from '@/stores/userStore'
+
+const userStore = useUserStore()
 
 //创建宠物
 const petDialogVisible = ref<boolean>(false)
 
 const userEmailInput = ref<string>('')
 const userInfo = reactive({
-  phone: '15800000000',
-  channel: '独立站',
-  email: 'xxxxx@abc.com',
-  digitalPets: ['alice', 'duobi', 'miemie']
+  // phone: '',
+  channel: '', //独立站
+  // email: '',
+  digitalPets: []
 })
 
 onMounted(() => {
-  console.log('env', import.meta.env.VITE_APP_DEV_URL)
-  getPetDescription({
+  console.log('')
+  $getPetDescription({
     pet_uuid: 'pet-99C32RwY'
   }).then(res => {
-    console.log('res', res)
+    console.log('pet', res.data)
   }).catch(err => {
     console.log(err)
   })
+
 })
+
+// {
+//     "user_name": "user10",
+//     "password": "Teppaw33",
+//     "phone_number": "15159248545",
+//     "email": "973126591@qq.com",
+//     "user_uuid": "user-jHJzoT20",
+//     "request_id": "value1"
+// }
+
+
 </script>
 
 <template>
@@ -39,9 +54,9 @@ onMounted(() => {
   </div>
   <el-card>
     <el-descriptions title="用户信息" :column="2">
-      <el-descriptions-item label="手机">{{ userInfo.phone }}</el-descriptions-item>
+      <el-descriptions-item label="手机">{{ userStore.phone }}</el-descriptions-item>
       <el-descriptions-item label="渠道">{{ userInfo.channel }}</el-descriptions-item>
-      <el-descriptions-item label="邮箱">{{ userInfo.email }}</el-descriptions-item>
+      <el-descriptions-item label="邮箱">{{ userStore.email }}</el-descriptions-item>
       <el-descriptions-item label="数字宠物">
         <!-- TODO: 样式待调整 -->
         <div class="petList">

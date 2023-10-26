@@ -1,17 +1,12 @@
 <script setup lang="ts">
-import type { UploadProps } from 'element-plus'
+import { $createPet } from '@/api/pet'
+import { useUserStore } from '@/stores/userStore'
+import { ElMessage, type UploadProps } from 'element-plus'
 import { reactive, ref } from 'vue'
 
-const fileList = ref([
-  {
-    name: 'cat1',
-    url: 'https://img1.baidu.com/it/u=244313577,3675477082&fm=253&fmt=auto&app=138&f=JPEG?w=750&h=500'
-  },
-  {
-    name: 'cat1',
-    url: 'https://img1.baidu.com/it/u=3897762164,3002258442&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=666'
-  }
-])
+const userStore = useUserStore()
+
+const fileList = ref<{ name: string; url: string }[]>([])
 
 const form = reactive({
   email: '',
@@ -26,10 +21,32 @@ const form = reactive({
 const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles)
 }
+
+const createNewPet = async () => {
+  // console.log('-----', form.petName, fileList.value)
+  try {
+    const { data } = await $createPet({
+      images: fileList.value,
+      pet_name: form.petName,
+      belong_user_uuid: userStore.userId
+    })
+    console.log('data', data)
+    // $message
+    ElMessage({
+      message: `创建成功, 宠物id为${data.pet_uuid}`,
+      type: 'success'
+    })
+  } catch (error) {
+    ElMessage({
+      message: `创建失败, ${error}`,
+      type: 'warning'
+    })
+  }
+}
 </script>
 
 <template>
-  <TepDialog title="创建数字宠物">
+  <TepDialog :handel-create="createNewPet" title="创建数字宠物">
     <el-form :model="form" label-width="120px" label-position="left">
       <el-form-item label="用户邮箱">
         <el-input v-model="form.email" />
@@ -51,11 +68,13 @@ const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
         <el-form-item label="原始图片">
           <el-upload
             v-model:file-list="fileList"
-            action=""
+            :auto-upload="false"
             list-type="picture-card"
             :on-remove="handleRemove"
           >
-            <el-icon><Plus /></el-icon>
+            <el-icon>
+              <Plus />
+            </el-icon>
           </el-upload>
         </el-form-item>
         <el-form-item label="出图风格">

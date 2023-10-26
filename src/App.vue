@@ -2,14 +2,27 @@
 import { RouterLink, RouterView } from 'vue-router'
 import { ref, onMounted, onBeforeMount } from 'vue'
 import router from './router'
+import { $getUserDescription } from '@/api/user'
+import { useUserStore } from './stores/userStore'
 
-// const activePath = ref(router.currentRoute.value.path)
+const userStore = useUserStore()
 
-// onMounted(() => {
-//   // <div>
-//   console.log(router.currentRoute.value, activePath.value)
-//   // activePath.value =
-// })
+onMounted(() => {
+  $getUserDescription({ user_uuid: 'user-jHJzoT20' })
+    .then((res) => {
+      const { user_name, phone_number, email } = res.data
+      userStore.$patch((state) => {
+        state.userName = user_name
+        state.phone = phone_number
+        state.email = email
+      })
+      // userInfo.email = email;
+      // userInfo.phone = phone_number;
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+})
 </script>
 
 <template>

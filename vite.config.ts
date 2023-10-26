@@ -59,7 +59,7 @@ export default ({ command, mode }) =>
     },
 
     server: {
-      host: true,
+      host: true, // true 才可以使用 IP 网络服务
       //port: Number(loadEnv(mode, process.cwd()).VITE_APP_PORT),
       port: 5173,
       strictPort: true, // 端口被占用直接退出
@@ -74,7 +74,7 @@ export default ({ command, mode }) =>
               ? 'http://43.153.86.6'
               : loadEnv(mode, process.cwd()).VITE_APP_DEV_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, '')
+          // rewrite: (path) => path.replace(/^\/api/, '')
         }
       },
       hmr: {

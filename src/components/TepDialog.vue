@@ -3,12 +3,16 @@
 const props = defineProps<{
   modelValue?: boolean
   title: string
+  handelCreate: () => void
+  handelBeforeClose?: () => void
 }>()
 
 const emits = defineEmits(['update:modelValue'])
 
 const handelClose = () => {
+  if (props.handelBeforeClose) props.handelBeforeClose()
   emits('update:modelValue', false)
+  // console.log('组件',props.modelValue)
 }
 </script>
 
@@ -28,7 +32,8 @@ const handelClose = () => {
           type="primary"
           @click="
             () => {
-              handelClose()
+              props.handelCreate()
+              emits('update:modelValue', false)
             }
           "
         >

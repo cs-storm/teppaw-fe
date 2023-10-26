@@ -12,7 +12,8 @@ module.exports = {
   rules: {
     "@typescript-eslint/no-unused-vars": "off",
     "vue/valid-v-for":"off",
-    "vue/no-mutating-props":"warn"
+    "vue/no-mutating-props":"warn",
+    "no-unused-labels":"off"
   },
   parserOptions: {
     ecmaVersion: 'latest'
