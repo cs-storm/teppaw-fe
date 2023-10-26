@@ -3,7 +3,7 @@
 const props = defineProps<{
   modelValue?: boolean
   title: string
-  handelCreate: () => void
+  handelCreate?: () => void
   handelBeforeClose?: () => void
 }>()
 
