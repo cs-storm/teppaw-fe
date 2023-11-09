@@ -10,11 +10,12 @@ const userStore = useUserStore()
 onMounted(() => {
   $getUserDescription({ user_uuid: 'user-jHJzoT20' })
     .then((res) => {
-      const { user_name, phone_number, email } = res.data
+      const { user_name, phone_number, email, pets } = res.data
       userStore.$patch((state) => {
         state.userName = user_name
         state.phone = phone_number
         state.email = email
+        state.pets = pets
       })
       // userInfo.email = email;
       // userInfo.phone = phone_number;

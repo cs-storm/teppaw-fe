@@ -1,18 +1,49 @@
 <script setup lang="ts">
 import type { UploadProps, UploadUserFile } from 'element-plus'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import trainDialog from './trainDialog.vue'
 import pictureMakingDialog from './pictureMakingDialog.vue'
+import { useUserStore } from '@/stores/userStore'
+import { $getPetDescription } from '@/api/pet'
 
-const selectedPet = ref('')
+const userStore = useUserStore()
+
+const selectedPet = ref()
 
 // 训练
 const trainDialogVisible = ref<boolean>(false)
 // 出图
 const pictureMakingDialogVisible = ref<boolean>(false)
 
-// 宠物列表下拉
-const petList = ref(['xx', 'yy'])
+// 监听宠物列表请求完成
+watch(
+  () => userStore.pets,
+  (newVal) => {
+    if (newVal.length > 0) {
+      selectedPet.value = newVal[0].id
+    }
+  }
+)
+
+// 宠物被选 请求宠物详情
+watch(
+  () => selectedPet.value,
+  (newVal) => {
+    if (newVal) {
+      const pet = userStore.pets.find((pet) => pet.id === newVal)
+      pet &&
+        $getPetDescription({
+          pet_uuid: pet.pet_uuid
+        })
+          .then((res) => {
+            console.log('pet', res.data)
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+    }
+  }
+)
 
 // 已上传的图片列表
 const fileList = ref<UploadUserFile[]>([
@@ -89,7 +120,11 @@ const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
     <el-descriptions title="猫猫信息">
       <el-descriptions-item label="数字宠物">
         <el-select v-model="selectedPet" class="m-2" placeholder="请选择你的宠物" size="small">
-          <el-option v-for="item in petList" :key="item" :label="item" :value="item"
+          <el-option
+            v-for="item in userStore.pets"
+            :key="item.id"
+            :label="item.pet_name"
+            :value="item.id"
         /></el-select>
       </el-descriptions-item>
     </el-descriptions>

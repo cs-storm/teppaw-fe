@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useUserStore } from '@/stores/userStore'
 
-const selectedPet = ref('')
+const userStore = useUserStore()
+
+const selectedPet = ref()
 const selectedStyle = ref('')
-
-// 宠物列表下拉
-const petList = ref(['xx', 'yy'])
-
 const styleList = ref(['outstanding', 'retro'])
+
+// 监听宠物列表请求完成
+watch(
+  () => userStore.pets,
+  (newVal) => {
+    if (newVal.length > 0) {
+      selectedPet.value = newVal[0].id
+    }
+  }
+)
 
 const imgList = ref([
   {
@@ -30,7 +39,11 @@ const imgList = ref([
     <el-descriptions title="画廊">
       <el-descriptions-item label="数字宠物">
         <el-select v-model="selectedPet" class="m-2" placeholder="请选择你的宠物" size="small">
-          <el-option v-for="item in petList" :key="item" :label="item" :value="item"
+          <el-option
+            v-for="item in userStore.pets"
+            :key="item.id"
+            :label="item.pet_name"
+            :value="item.id"
         /></el-select>
       </el-descriptions-item>
       <el-descriptions-item label="风格">

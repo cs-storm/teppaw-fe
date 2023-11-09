@@ -9,6 +9,7 @@ export const useUserStore = defineStore({
       userName: '',
       phone: '',
       email: '',
+      pets: [] as { pet_name: string, id: number, pet_uuid: string }[]
     }
   }
   // const user_uuid = ref('user-jHJzoT20');

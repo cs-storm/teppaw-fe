@@ -15,21 +15,21 @@ const petDialogVisible = ref<boolean>(false)
 const userEmailInput = ref<string>('')
 const userInfo = reactive({
   // phone: '',
-  channel: '', //独立站
+  channel: '' //独立站
   // email: '',
-  digitalPets: []
+  // digitalPets: []
 })
 
 onMounted(() => {
-  console.log('')
-  $getPetDescription({
-    pet_uuid: 'pet-99C32RwY'
-  }).then(res => {
-    console.log('pet', res.data)
-  }).catch(err => {
-    console.log(err)
-  })
-
+  // $getPetDescription({
+  //   pet_uuid: 'pet-99C32RwY'
+  // })
+  //   .then((res) => {
+  //     console.log('pet', res.data)
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
 })
 
 // {
@@ -40,17 +40,25 @@ onMounted(() => {
 //     "user_uuid": "user-jHJzoT20",
 //     "request_id": "value1"
 // }
-
-
 </script>
 
 <template>
   <div class="topContainer">
-    <el-button type="primary" @click="() => {
-      petDialogVisible = true
-    }
-      ">创建数字宠物</el-button>
-    <el-input v-model="userEmailInput" class="email-input" placeholder="请输入邮箱检索用户" :suffix-icon="Search" />
+    <el-button
+      type="primary"
+      @click="
+        () => {
+          petDialogVisible = true
+        }
+      "
+      >创建数字宠物</el-button
+    >
+    <el-input
+      v-model="userEmailInput"
+      class="email-input"
+      placeholder="请输入邮箱检索用户"
+      :suffix-icon="Search"
+    />
   </div>
   <el-card>
     <el-descriptions title="用户信息" :column="2">
@@ -60,7 +68,7 @@ onMounted(() => {
       <el-descriptions-item label="数字宠物">
         <!-- TODO: 样式待调整 -->
         <div class="petList">
-          <el-tag v-for="pet in userInfo.digitalPets">{{ pet }}</el-tag>
+          <el-tag v-for="pet in userStore.pets">{{ pet.pet_name }}</el-tag>
         </div>
       </el-descriptions-item>
     </el-descriptions>
@@ -91,7 +99,10 @@ onMounted(() => {
 
     .petList {
       display: inline-flex;
-      flex-direction: column;
+      .el-tag {
+        margin-right: 5px;
+      }
+      // flex-direction: column;
     }
   }
 }
